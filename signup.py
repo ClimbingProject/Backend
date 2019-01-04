@@ -4,6 +4,7 @@ signup = Blueprint('signup', __name__)
 
 test_list = [{"user1": "1234", "user2": "5678"}]
 
+
 # GETの実装
 # curl -i http://0.0.0.0:3001/get
 @signup.route('/get', methods=['GET'])
@@ -22,7 +23,7 @@ def new_user():
     if username in test_list[0]:
         abort(400) # existing user
     user = username
-    #user.hash_password(password)
+    # user.hash_password(password)
     # db.session.add(user)
     # db.session.commit()
     return jsonify({ 'username': user }), 201#, {'Location': url_for('get_user', id = user.id, _external = True)}
