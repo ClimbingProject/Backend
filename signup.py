@@ -31,10 +31,9 @@ def new_user():
         abort(400) # missing arguments
 
     try:
-        response = table.get_item(Key={"email": email})#, "password": password})
-        print(response)
+        response = table.get_item(Key={"email": email})
         if 'Item' in response:
-            abort(400) # existing user
+            abort(400)  # existing user
         table.put_item(
             Item={
                 'email': email,
@@ -44,7 +43,7 @@ def new_user():
         # user.hash_password(password)
         # db.session.add(user)
         # db.session.commit()
-        return jsonify({ 'ok': email }), 201#, {'Location': url_for('get_user', id = user.id, _external = True)}
+        return jsonify({'ok': email}), 201#, {'Location': url_for('get_user', id = user.id, _external = True)}
     except ClientError as e:
         print(e.response['Error']['Message'])
 
