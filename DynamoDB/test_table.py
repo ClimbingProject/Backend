@@ -2,38 +2,53 @@ import boto3
 
 dynamodb = boto3.resource('dynamodb', region_name='us-west-2', endpoint_url="http://localhost:8000")
 table = dynamodb.create_table(
-    TableName='Users',
+    TableName='test',
     KeySchema=[
         {
-            'AttributeName': 'user_id',
+            'AttributeName': 'email',
             'KeyType': 'HASH'  #Partition key
+        },
+        {
+            'AttributeName': 'user_id',
+            'KeyType': 'RANGE'  #Sort key
         }
     ],
-    GlobalSecondaryIndexes=[
+    LocalSecondaryIndexes=[
         {
-            'IndexName': 'user_gsi',
+            'IndexName': 'typeLSIndex',
             'KeySchema': [
                 {
                     'AttributeName': 'email',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'password',
-                    'KeyType': 'HASH'
+                    'KeyType': 'HASH'  # Partition key
                 },
                 {
                     'AttributeName': 'full_name',
-                    'KeyType': 'HASH'
+                    'KeyType': 'RANGE'  #Sort key
                 }
-            ],
+                ],
             'Projection': {
-                'ProjectionType': 'KEYS_ONLY',
-            },
-            'ProvisionedThroughput': {
-                'ReadCapacityUnits': 5,
-                'WriteCapacityUnits': 5
+                'ProjectionType': 'INCLUDE',
+                'NonKeyAttributes': ['user_id']
             }
         }
+    ],
+    GlobalSecondaryIndexes=[
+            {
+                'IndexName': 'GSI',
+                'KeySchema': [
+                    {
+                        'AttributeName': 'password',
+                        'KeyType': 'HASH'
+                    }
+                ],
+                'Projection': {
+                    'ProjectionType': 'KEYS_ONLY',
+                    },
+                'ProvisionedThroughput': {
+                    'ReadCapacityUnits': 1,
+                    'WriteCapacityUnits': 1
+                }
+            }
     ],
     AttributeDefinitions=[
         {

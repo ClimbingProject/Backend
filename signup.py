@@ -1,18 +1,10 @@
 from flask import Flask, jsonify, Blueprint, request, abort
-import boto3
-from botocore.exceptions import ClientError
+import bcrypt
+from pymongo import MongoClient
+client = MongoClient('mongodb://cp:climbing_project1@ds157574.mlab.com:57574/climbing_project')
+db = client['climbing_project']
 
 signup = Blueprint('signup', __name__)
-
-# Get the service resource.
-dynamodb = boto3.resource('dynamodb', region_name='us-west-2', endpoint_url="http://localhost:8000")
-
-# Instantiate a table resource object without actually
-# creating a DynamoDB table. Note that the attributes of this table
-# are lazy-loaded: a request is not made nor are the attribute
-# values populated until the attributes
-# on the table resource are accessed or its load() method is called.
-table = dynamodb.Table('Users')
 
 # GETの実装
 # curl -i http://0.0.0.0:3001/get
@@ -30,22 +22,16 @@ def new_user():
     if email is None or password is None:
         abort(400) # missing arguments
 
-    try:
-        response = table.get_item(Key={"email": email})
-        if 'Item' in response:
-            abort(400)  # existing user
-        table.put_item(
-            Item={
-                'email': email,
-                'password': password
-            }
-        )
-        # user.hash_password(password)
-        # db.session.add(user)
-        # db.session.commit()
-        return jsonify({'ok': email}), 201#, {'Location': url_for('get_user', id = user.id, _external = True)}
-    except ClientError as e:
-        print(e.response['Error']['Message'])
+    users = db['users']
+    existing_user = users.find_one({'email': email})
+
+    if existing_user is None:
+        hashpass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        users.insert({'email': email, 'password': hashpass})
+        return jsonify({'ok': email}), 201
+
+    return 'That username already exists!', 400
+
 
 
 #"{\"email\":{\"S\": \"miguel@gmail.com\"}}"
