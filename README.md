@@ -64,4 +64,4 @@
 
         awslocal s3 rm s3://cp_s3/zorro.mp4
 
-Link for local S3 [tutorial]('https://medium.com/@andyalky/developing-aws-apps-locally-with-localstack-7f3d64663ce4')
+Link for local S3 [tutorial](https://medium.com/@andyalky/developing-aws-apps-locally-with-localstack-7f3d64663ce4 "tutorial")
