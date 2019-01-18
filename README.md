@@ -1,36 +1,24 @@
 # Backend
 ### For testing in local
-- simply run main.py to start api on the terminal
+- simply run main.py to start API on the terminal
 
         python3 main.py
-- start DynamoDB in local
 
-    - If you haven't downloaded dynamoDB, dowload from [here](https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
-    - Start DynamoDB on the terminal
+- start mongoDB in terminal
 
-            java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+        mongo ds157574.mlab.com:57574/climbing_project -u cp -p climbing_project1
 
-You can check what's in DynamoDB by this command on the terminal
+- start AWS S3 on local
 
-    aws dynamodb list-tables --endpoint-url http://localhost:8000
+        $ pip3 install localstack awscli-local
+        $ localstack start
 
-lsit table
+- upload file to local S3
 
-    aws dynamodb list-tables --endpoint-url http://localhost:8000
+        awslocal s3 cp test2.txt s3://cp_s3/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 
-scan items in the table
+- delete file from local S3
 
-    aws dynamodb scan --table-name Users --endpoint-url http://localhost:8000
+        awslocal s3 rm s3://cp_s3/zorro.mp4
 
-
-delete table
-
-    aws dynamodb delete-table --table-name Users --endpoint-url http://localhost:8000
-
-delete item from table
-
-    aws dynamodb delete-item --table-name Users --key "{\"email\": {\"S\": \"miguel@gmail.com\"}, \"password\":{\"S\": \"python\"}}" --endpoint-url http://localhost:8000
-
-get item from table
-
-    aws dynamodb get-item --table-name Users --key  "{\"email\": {\"S\": \"miguel@gmail.com\"}, \"password\":{\"S\": \"python\"}}" --endpoint-url http://localhost:8000
+Link for local S3 [tutorial]('https://medium.com/@andyalky/developing-aws-apps-locally-with-localstack-7f3d64663ce4')
