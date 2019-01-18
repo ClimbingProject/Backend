@@ -1,6 +1,13 @@
 from flask import Flask, jsonify, Blueprint, request, abort, send_file
 import boto3
 import localstack_client.session
+from pymongo import MongoClient
+from time import gmtime, strftime
+import uuid
+
+# TODO change mongoDB url when deploy
+client = MongoClient('mongodb://cp:climbing_project1@ds157574.mlab.com:57574/climbing_project')
+db = client['climbing_project']
 
 video = Blueprint('video', __name__)
 
@@ -10,26 +17,44 @@ video = Blueprint('video', __name__)
 def get_video():
     try:
         session = localstack_client.session.Session()
-        # s3 = boto3.client('s3') <- Change to this when deploy.
-        s3 = session.client('s3') # this is for local development purpose only
+        # TODO s3 = boto3.client('s3') <- Change to this when deploy.
+        s3 = session.client('s3')  # this is for local development purpose only
 
-        file_path = request.json.get('file_name')
+        file_name = '{}.{}'.format(uuid.uuid4().hex, 'mp4')
         s3.upload_file(
-            Filename=file_path,
-            Bucket='cp_s3',
-            Key=file_path,
-            ExtraArgs={"GrantRead": 'uri=http://acs.amazonaws.com/groups/global/AllUsers'}
+            Filename=request.json.get('user_uuid'),
+            Bucket='cp_s3',  # TODO change bucket name
+            Key=file_name,
         )
 
         s3.put_object_acl(
-            Bucket='cp_s3',
-            Key=file_path,
+            Bucket='cp_s3',  # TODO change bucket name
+            Key=file_name,
             GrantRead='uri="http://acs.amazonaws.com/groups/global/AllUsers"'
         )
-        return jsonify({'ok': file_path}), 201
+
+        # upload video to 'videos' table in database
+        url = 'http://localhost:4572/cp_s3/' + request.json.get('uuid') + file_name  # TODO change this url when deploy
+        videos = db['videos']
+        videos.insert({
+            'likes': 0,
+            'user_uuid': request.json.get('user_uuid'),
+            'time': strftime("%Y-%m-%d %H:%M", gmtime()),
+            'place': request.json.get('place'),
+            'url': url,
+            'project_name': request.json.get('project_name'),
+            'difficulty': request.json.get('difficulty'),
+        })
+
+        # add video id to user's video list
+        # find the user by user's uuid and insert video url
+        db['users'].update_one(
+            {"uuid": request.json.get('user_uuid')},
+            {'$addToSet': {'video_list': [url]}}
+        )
+
+        return jsonify({'ok': file_name}), 201
 
     except Exception as e:
         print(e)
         return 'ERROR\n', 400
-
-    # return send_file('zorro.mp4')#, attachment_filename='zorro.mp4')

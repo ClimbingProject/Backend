@@ -1,6 +1,8 @@
-from flask import jsonify, Blueprint, request, abort
+from flask import jsonify, Blueprint, request
 import bcrypt
 from pymongo import MongoClient
+
+# TODO change mongoDB url when deploy
 client = MongoClient('mongodb://cp:climbing_project1@ds157574.mlab.com:57574/climbing_project')
 db = client['climbing_project']
 

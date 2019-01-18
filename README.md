@@ -1,4 +1,41 @@
 # Backend
+
+## API instruction
+#### Please request with empty string if a field is empty.
+
+#### All request is passed by JSON
+
+#### http://0.0.0.0:3001/signup (POST)
+
+        {
+            "email": "<email>",
+            "password" : "<password>",
+            "user_id": "<user_id>",
+            "full_name": "<full_name>"
+        }
+
+
+#### http://0.0.0.0:3001/login (GET)
+
+        {
+            "email": "<email>",
+            "password" : "<password>"
+        }
+
+
+#### http://0.0.0.0:3001/video/upload (POST)
+
+        {
+            "file_name": "<file_name>"
+            "user_uuid": "<user_uuid>",
+            "place" : "<place>",
+            "project_name": "<project_name>",
+            "difficulty" : "<difficulty>"
+        }
+
+
+------------
+
 ### For testing in local
 - simply run main.py to start API on the terminal
 
@@ -12,10 +49,16 @@
 
         $ pip3 install localstack awscli-local
         $ localstack start
+        $ aws --endpoint-url=http://localhost:4572 s3 mb s3://cp_s3
+        $ awslocal s3 mb s3://cp_s3
+        $ awslocal s3api put-bucket-acl --bucket cp_s3 --acl public-read
+
 
 - upload file to local S3
 
         awslocal s3 cp test2.txt s3://cp_s3/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+        awslocal s3api put-object-acl --bucket cp_s3 --key zorro.mp4 --grant-read uri=http://acs.amazonaws.com/groups/global/AllUsers
+
 
 - delete file from local S3
 
