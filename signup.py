@@ -18,7 +18,7 @@ def get():
     return jsonify(result)
 
 
-# curl -i -X POST -H "Content-Type: application/json" -d '{"email":"miguel@gmail.com","password":"python"}' http://0.0.0.0:3001/signup
+# curl -i -X POST -H "Content-Type: application/json" -d '{"email":"miguel@gmail.com","password":"python", "user_id": "", "full_name": ""}' http://0.0.0.0:3001/signup
 @signup.route('/signup', methods=['POST'])
 def new_user():
     email = request.json.get('email')
@@ -41,7 +41,7 @@ def new_user():
         })
         return jsonify({'ok': email}), 201
 
-    return 'That username already exists!', 400
+    return 'That email already exists!\n', 400
 
 
 

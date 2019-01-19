@@ -24,7 +24,8 @@ def get():
         if bcrypt.hashpw(password.encode('utf-8'), login_user['password']) == \
                 login_user['password']:
             return jsonify({'ok': email + ': successfully logged in.'}), 201
-    return 'Invalid username/password combination', 400
+
+    return 'Invalid username or password combination\n', 400
 
 
 
