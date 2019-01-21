@@ -12,9 +12,9 @@ db = client['climbing_project']
 video = Blueprint('video', __name__)
 
 
-# curl -i -X POST -H "Content-Type: application/json" -d '{"file_name": "zorro.mp4", "user_uuid": "08be0c6b58e64f309b497e9e650b3db4", "place": "", "project_name": "", "difficulty": ""}' http://0.0.0.0:3001/video/upload
+# curl -i -X POST -H "Content-Type: application/json" -d '{"file_name": "zorro.mp4", "user_uuid": "967f6956fbb74f358e7fc894f7db7e10", "place": "", "project_name": "", "difficulty": ""}' http://0.0.0.0:3001/video/upload
 @video.route('/video/upload', methods=['POST'])
-def get_video():
+def upload_video():
     try:
         session = localstack_client.session.Session()
         # TODO s3 = boto3.client('s3') <- Change to this when deploy.
@@ -55,7 +55,7 @@ def get_video():
         # find the user by user's uuid and insert video url
         db['users'].update_one(
             {"uuid": user_uuid},
-            {'$addToSet': {'video_list': [url]}}
+            {'$addToSet': {'video_list': [url]}}  # TODO here might need to change to set to list 'addtolist'
         )
 
         return jsonify({'ok': file_name}), 201
@@ -63,3 +63,9 @@ def get_video():
     except Exception as e:
         print(e)
         return 'ERROR\n', 400
+
+
+@video.route('/video/n_latest', methods=['GET'])
+def n_latest():
+    n = request.json.get('n')
+    print(db['videos'].find().sort({'$natural': -1}).limit(n))
