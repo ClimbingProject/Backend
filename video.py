@@ -4,6 +4,7 @@ import localstack_client.session
 from pymongo import MongoClient
 from time import gmtime, strftime
 import uuid
+from bson.json_util import dumps
 
 # TODO change mongoDB url when deploy
 client = MongoClient('mongodb://cp:climbing_project1@ds157574.mlab.com:57574/climbing_project')
@@ -65,7 +66,13 @@ def upload_video():
         return 'ERROR\n', 400
 
 
+# curl -i -X GET -H "Content-Type: application/json" -d '{"n":1}' http://0.0.0.0:3001/video/n_latest
 @video.route('/video/n_latest', methods=['GET'])
 def n_latest():
     n = request.json.get('n')
-    print(db['videos'].find().sort({'$natural': -1}).limit(n))
+    result = db['videos'].find().sort([('$natural', -1)]).limit(n)
+    urls = []
+    for x in result:
+        urls.append(x['url'])
+    return jsonify(urls), 201
+

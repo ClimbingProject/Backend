@@ -34,6 +34,15 @@
         }
 
 
+#### http://0.0.0.0:3001/video/n_latest (GET)
+    {
+        "n": "<number of videos you want to get>"
+    }
+
+    return: the list of video url
+
+
+
 ------------
 
 ### For testing in local
