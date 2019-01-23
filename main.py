@@ -1,6 +1,6 @@
 from signup import signup
 from login import login
-from video import video
+from video import feed
 from flask import Flask, jsonify
 
 # Flaskクラスのインスタンスを作成
@@ -9,7 +9,7 @@ from flask import Flask, jsonify
 api = Flask(__name__)
 api.register_blueprint(signup)
 api.register_blueprint(login)
-api.register_blueprint(video)
+api.register_blueprint(feed)
 
 
 # エラーハンドリング

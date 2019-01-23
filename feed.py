@@ -10,11 +10,11 @@ from bson.json_util import dumps
 client = MongoClient('mongodb://cp:climbing_project1@ds157574.mlab.com:57574/climbing_project')
 db = client['climbing_project']
 
-video = Blueprint('video', __name__)
+feed = Blueprint('feed', __name__)
 
 
-# curl -i -X POST -H "Content-Type: application/json" -d '{"file_name": "zorro.mp4", "user_uuid": "967f6956fbb74f358e7fc894f7db7e10", "place": "", "project_name": "", "difficulty": ""}' http://0.0.0.0:3001/video/upload
-@video.route('/video/upload', methods=['POST'])
+# curl -i -X POST -H "Content-Type: application/json" -d '{"file_name": "zorro.mp4", "user_uuid": "967f6956fbb74f358e7fc894f7db7e10", "place": "", "project_name": "", "difficulty": ""}' http://0.0.0.0:3001/feed/upload
+@feed.route('/feed/upload', methods=['POST'])
 def upload_video():
     try:
         session = localstack_client.session.Session()
@@ -30,7 +30,7 @@ def upload_video():
             Key='{}/{}'.format(user_uuid, file_name),
             ExtraArgs={
                 'GrantRead': 'uri=http://acs.amazonaws.com/groups/global/AllUsers',
-                'ACL': 'public-read', 'ContentType': 'video/mp4'}
+                'ACL': 'public-read', 'ContentType': 'feed/mp4'}
         )
 
         s3.put_object_acl(
@@ -39,10 +39,10 @@ def upload_video():
             GrantRead='uri=http://acs.amazonaws.com/groups/global/AllUsers'
         )
 
-        # upload video to 'videos' table in database
+        # upload feed to 'feed' table in database
         url = 'http://localhost:4572/cp_s3/' + user_uuid + '/' + file_name  # TODO change this url when deploy
-        videos = db['videos']
-        videos.insert({
+        feeds = db['feed']
+        feeds.insert({
             'likes': 0,
             'user_uuid': user_uuid,
             'time': strftime("%Y-%m-%d %H:%M", gmtime()),
@@ -52,8 +52,8 @@ def upload_video():
             'difficulty': request.json.get('difficulty'),
         })
 
-        # add video id to user's video list
-        # find the user by user's uuid and insert video url
+        # add feed id to user's feed list
+        # find the user by user's uuid and insert feed url
         db['users'].update_one(
             {"uuid": user_uuid},
             {'$addToSet': {'video_list': [url]}}  # TODO here might need to change to set to list 'addtolist'
@@ -66,13 +66,14 @@ def upload_video():
         return 'ERROR\n', 400
 
 
-# curl -i -X GET -H "Content-Type: application/json" -d '{"n":1}' http://0.0.0.0:3001/video/n_latest
-@video.route('/video/n_latest', methods=['GET'])
+# curl -i -X GET -H "Content-Type: application/json" -d '{"n":1}' http://0.0.0.0:3001/feed/n_latest
+@feed.route('/feed/n_latest', methods=['GET'])
 def n_latest():
     n = request.json.get('n')
-    result = db['videos'].find().sort([('$natural', -1)]).limit(n)
+    result = db['feed'].find().sort([('$natural', -1)]).limit(n)
     urls = []
     for x in result:
+        print(x)
         urls.append(x['url'])
     return jsonify(urls), 201
 
