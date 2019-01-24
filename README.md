@@ -5,6 +5,8 @@
 
 #### All request is passed by JSON
 
+## *signup*
+
 #### http://0.0.0.0:3001/signup (POST)
 
         {
@@ -15,6 +17,8 @@
         }
 
 
+## *login*
+
 #### http://0.0.0.0:3001/login (GET)
 
         {
@@ -23,7 +27,9 @@
         }
 
 
-#### http://0.0.0.0:3001/video/upload (POST)
+## *feed*
+
+#### http://0.0.0.0:3001/feed/upload (POST)
 
         {
             "file_name": "<file_name>"
@@ -34,13 +40,21 @@
         }
 
 
-#### http://0.0.0.0:3001/video/n_latest (GET)
+#### http://0.0.0.0:3001/feed/n_latest (GET)
     {
         "n": "<number of videos you want to get>"
     }
 
     return: the list of video url
 
+
+#### http://0.0.0.0:3001/feed/incre_like (POST)
+    {
+        "uuid": "<uuid of the feed to increment the like>"
+    }
+
+
+## *projects*
 
 #### http://0.0.0.0:3001/projects/add (POST)
     {

@@ -50,6 +50,7 @@ def upload_video():
             'url': url,
             'project_name': request.json.get('project_name'),
             'difficulty': request.json.get('difficulty'),
+            'uuid': uuid.uuid4().hex
         })
 
         # add feed id to user's feed list
@@ -77,3 +78,9 @@ def n_latest():
         urls.append(x['url'])
     return jsonify(urls), 201
 
+
+# curl -i -X POST -H "Content-Type: application/json" -d '{"uuid": "967f6956fbb74f358e7fc894f7db7e10"}' http://0.0.0.0:3001/feed/incre_like
+@feed.route('/feed/incre_like', methods=['POST'])
+def incre_like():
+    db['feed'].items.update({'uuid': request.json.get('uuid')}, { '$inc': {'likes': 1}})
+    return jsonify({'ok': 'successfully incremented'}), 201

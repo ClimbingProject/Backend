@@ -8,7 +8,7 @@ db = client['climbing_project']
 
 login = Blueprint('login', __name__)
 
-# GETの実装
+
 # curl -i -X GET -H "Content-Type: application/json" -d '{"email":"miguel@gmail.com","password":"python"}' http://0.0.0.0:3001/login
 @login.route('/login', methods=['GET'])
 def login():

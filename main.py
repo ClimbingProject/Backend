@@ -11,6 +11,7 @@ api = Flask(__name__)
 api.register_blueprint(signup)
 api.register_blueprint(login)
 api.register_blueprint(feed)
+api.register_blueprint(projects)
 
 
 # エラーハンドリング
