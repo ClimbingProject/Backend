@@ -1,6 +1,7 @@
 from signup import signup
 from login import login
-from video import feed
+from feed import feed
+from projects import projects
 from flask import Flask, jsonify
 
 # Flaskクラスのインスタンスを作成

@@ -42,6 +42,31 @@
     return: the list of video url
 
 
+#### http://0.0.0.0:3001/projects/add (POST)
+    {
+        "name":"<name of the porject>",
+        "type":"<Boulder, top lope or etc>",
+        "rating": "<difficulty>",
+        "location": "[
+                  "California",
+                  "Yosemite National Park",
+                  "Yosemite Valley",
+                  "Yosemite Valley Bouldering",
+                  "Curry Village",
+                  "Zorro Boulder"
+              ]",
+        "long": -119.576,
+        "lag": 37.7375
+    }
+
+
+#### http://0.0.0.0:3001/projects/get (GET)
+    {
+        "name": "<name of the project>"
+    }
+
+    return: info of the project
+
 
 ------------
 

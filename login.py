@@ -11,7 +11,7 @@ login = Blueprint('login', __name__)
 # GETの実装
 # curl -i -X GET -H "Content-Type: application/json" -d '{"email":"miguel@gmail.com","password":"python"}' http://0.0.0.0:3001/login
 @login.route('/login', methods=['GET'])
-def get():
+def login():
     email = request.json.get('email')
     password = request.json.get('password')
     # if email is None or password is None:
