@@ -82,6 +82,19 @@
     return: info of the project
 
 
+## *delete*
+
+#### http://0.0.0.0:3001/delete/user (POST)
+    {
+        "uuid": <uuid of the user to delete>
+    }
+
+
+#### http://0.0.0.0:3001/delete/feed (POST)
+    {
+        "uuid": <uuid of the feed to delete>
+    }
+
 ------------
 
 ### For testing in local

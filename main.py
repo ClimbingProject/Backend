@@ -2,6 +2,7 @@ from signup import signup
 from login import login
 from feed import feed
 from projects import projects
+from delete import delete
 from flask import Flask, jsonify
 
 # Flaskクラスのインスタンスを作成
@@ -12,6 +13,7 @@ api.register_blueprint(signup)
 api.register_blueprint(login)
 api.register_blueprint(feed)
 api.register_blueprint(projects)
+api.register_blueprint(delete)
 
 
 # エラーハンドリング
