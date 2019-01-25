@@ -3,12 +3,12 @@ from login import login
 from feed import feed
 from projects import projects
 from delete import delete
-from flask import Flask, jsonify
+import all_module as am
 
 # Flaskクラスのインスタンスを作成
 # __name__は現在のファイルのモジュール名
 # Register api routes from each files
-api = Flask(__name__)
+api = am.Flask(__name__)
 api.register_blueprint(signup)
 api.register_blueprint(login)
 api.register_blueprint(feed)
@@ -19,7 +19,7 @@ api.register_blueprint(delete)
 # エラーハンドリング
 @signup.errorhandler(404)
 def not_found(error):
-    return jsonify({'error': 'Not found'}), 404
+    return am.jsonify({'error': 'Not found'}), 404
 
 
 # ファイルをスクリプトとして実行した際に
